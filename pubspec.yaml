@@ -1,0 +1,64 @@
+name: receiptlens
+description: "On-device receipt digitization: capture, OCR, categorize, and export - with zero network calls for the core flow."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # Local, encrypted persistence
+  drift: ^2.22.0
+  sqlite3_flutter_libs: ^0.5.28
+  sqlite3: ^2.7.4
+  path_provider: ^2.1.5
+  path: ^1.9.1
+
+  # Field-level encryption for anything sensitive stored in Drift/SQLite
+  cryptography: ^2.7.0
+  flutter_secure_storage: ^9.2.4
+
+  # On-device OCR (Google ML Kit - no network round trip to a cloud OCR API)
+  google_mlkit_text_recognition: ^0.15.0
+  camera: ^0.11.0+2
+
+  # On-device TFLite inference for the line-item category classifier
+  tflite_flutter: ^0.11.0
+
+  # Image cropping / pixel manipulation for the capture -> crop pipeline
+  image: ^4.3.0
+
+  # Formatting + export
+  intl: ^0.20.2
+  csv: ^6.0.0
+  share_plus: ^10.1.4
+  collection: ^1.19.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+  drift_dev: ^2.22.0
+  build_runner: ^2.4.13
+  mockito: ^5.4.4
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/model/category_classifier.tflite
+    - assets/model/vocab.json
+    - assets/model/categories.json
+    - assets/model/weights.json

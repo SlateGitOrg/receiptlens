@@ -1,0 +1,11 @@
+# Placeholder identifiers - replace with the real package/bundle id and
+# developer account before running any lane against a real store listing.
+# Intentionally not consumed by CI (see fastlane/README.md).
+
+# Android
+# json_key_file("path/to/play-store-key.json")
+package_name("com.receiptlens.receiptlens")
+
+# iOS
+# apple_id("release-manager@example.com")
+app_identifier("com.receiptlens.receiptlens")

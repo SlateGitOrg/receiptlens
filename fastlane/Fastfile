@@ -1,0 +1,72 @@
+# Documented release lanes - NOT run in CI (see fastlane/README.md).
+#
+# These lanes assume you're invoking Fastlane from inside `android/` or
+# `ios/` respectively (Fastlane's usual convention for Flutter projects),
+# i.e. `cd android && bundle exec fastlane android beta`.
+
+default_platform(:android)
+
+platform :android do
+  desc "Run the Android unit test suite (no signing required)"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Build a release AAB and upload to the Play Console internal track"
+  lane :beta do
+    gradle(
+      task: "bundle",
+      build_type: "Release",
+      properties: {
+        "android.injected.signing.store.file" => ENV["ANDROID_KEYSTORE_PATH"],
+        "android.injected.signing.store.password" => ENV["ANDROID_KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["ANDROID_KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["ANDROID_KEY_PASSWORD"],
+      }
+    )
+    upload_to_play_store(
+      track: "internal",
+      json_key: ENV["PLAY_STORE_JSON_KEY_PATH"],
+      aab: "../build/app/outputs/bundle/release/app-release.aab"
+    )
+  end
+
+  desc "Promote the current internal build to production"
+  lane :release do
+    upload_to_play_store(
+      track: "production",
+      json_key: ENV["PLAY_STORE_JSON_KEY_PATH"],
+      skip_upload_aab: true,
+      skip_upload_apk: true
+    )
+  end
+end
+
+platform :ios do
+  desc "Run the iOS unit test suite on a simulator (no signing required)"
+  lane :test do
+    run_tests(scheme: "Runner", devices: ["iPhone 15"])
+  end
+
+  desc "Build and upload to TestFlight"
+  lane :beta do
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_filepath: ENV["ASC_KEY_PATH"]
+    )
+    match(type: "appstore", readonly: true)
+    build_app(scheme: "Runner", export_method: "app-store")
+    upload_to_testflight
+  end
+
+  desc "Submit the current TestFlight build for App Store review"
+  lane :release do
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_filepath: ENV["ASC_KEY_PATH"]
+    )
+    deliver(submit_for_review: true, automatic_release: false)
+  end
+end

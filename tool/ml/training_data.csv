@@ -1,0 +1,181 @@
+text,category
+staples copy paper ream,office_supplies
+office depot ink cartridge,office_supplies
+box of ballpoint pens,office_supplies
+sticky notes multipack,office_supplies
+printer toner cartridge,office_supplies
+manila folders 100 count,office_supplies
+stapler and staples set,office_supplies
+whiteboard markers pack,office_supplies
+legal pad notepads,office_supplies
+envelopes letter size box,office_supplies
+desk organizer tray,office_supplies
+binder clips assorted,office_supplies
+copy paper case 5000 sheets,office_supplies
+label maker tape refill,office_supplies
+filing cabinet folders,office_supplies
+highlighters 12 pack,office_supplies
+correction tape rolls,office_supplies
+push pins and thumbtacks,office_supplies
+shipping mailer envelopes,office_supplies
+notebook spiral bound,office_supplies
+starbucks coffee grande latte,meals_entertainment
+chipotle burrito bowl lunch,meals_entertainment
+client dinner steakhouse,meals_entertainment
+panera bread sandwich combo,meals_entertainment
+doordash delivery order,meals_entertainment
+uber eats dinner delivery,meals_entertainment
+team lunch pizza order,meals_entertainment
+coffee shop espresso,meals_entertainment
+happy hour drinks with client,meals_entertainment
+breakfast meeting diner,meals_entertainment
+catering for office meeting,meals_entertainment
+sushi restaurant business dinner,meals_entertainment
+bar tab client entertainment,meals_entertainment
+bakery pastries for meeting,meals_entertainment
+food truck lunch order,meals_entertainment
+grubhub order office,meals_entertainment
+restaurant tip and tax,meals_entertainment
+deli sandwich platter,meals_entertainment
+ice cream shop treat,meals_entertainment
+brewery tasting client outing,meals_entertainment
+uber ride to airport,travel
+lyft ride downtown meeting,travel
+delta airlines flight ticket,travel
+hotel marriott two nights,travel
+airbnb stay conference trip,travel
+rental car hertz weekly,travel
+parking garage fee downtown,travel
+taxi fare from airport,travel
+train ticket amtrak,travel
+airport shuttle service,travel
+baggage fee checked bag,travel
+toll road ezpass charge,travel
+gas station fuel fill up,travel
+hotel resort fee,travel
+conference registration travel,travel
+mileage reimbursement drive,travel
+airline seat upgrade fee,travel
+motel overnight stay,travel
+car rental insurance add on,travel
+ride share airport pickup,travel
+adobe creative cloud subscription,software_subscriptions
+microsoft 365 monthly plan,software_subscriptions
+zoom pro subscription renewal,software_subscriptions
+aws cloud hosting invoice,software_subscriptions
+github team plan billing,software_subscriptions
+slack workspace subscription,software_subscriptions
+dropbox storage plan,software_subscriptions
+quickbooks online subscription,software_subscriptions
+notion team workspace plan,software_subscriptions
+figma professional plan,software_subscriptions
+google workspace billing,software_subscriptions
+mailchimp monthly plan,software_subscriptions
+canva pro subscription,software_subscriptions
+zapier automation plan,software_subscriptions
+hubspot crm subscription,software_subscriptions
+salesforce license renewal,software_subscriptions
+domain name renewal godaddy,software_subscriptions
+web hosting monthly invoice,software_subscriptions
+antivirus software license,software_subscriptions
+project management tool subscription,software_subscriptions
+electric utility bill payment,utilities
+water bill monthly payment,utilities
+internet service provider bill,utilities
+gas utility bill,utilities
+phone bill monthly service,utilities
+office electricity invoice,utilities
+trash and recycling service fee,utilities
+sewer utility charge,utilities
+heating oil delivery bill,utilities
+cell phone plan invoice,utilities
+broadband internet invoice,utilities
+landline phone service bill,utilities
+electric company statement,utilities
+water utility district bill,utilities
+mobile carrier monthly bill,utilities
+office wifi service charge,utilities
+propane tank refill bill,utilities
+cable and internet bundle bill,utilities
+municipal utility payment,utilities
+power company invoice,utilities
+dell laptop computer purchase,equipment_hardware
+office desk and chair,equipment_hardware
+external monitor display,equipment_hardware
+wireless keyboard and mouse,equipment_hardware
+network router purchase,equipment_hardware
+usb c docking station,equipment_hardware
+laser printer machine,equipment_hardware
+external hard drive backup,equipment_hardware
+webcam for video calls,equipment_hardware
+office chair ergonomic,equipment_hardware
+standing desk purchase,equipment_hardware
+tablet device for field work,equipment_hardware
+phone case and screen protector,equipment_hardware
+server rack hardware,equipment_hardware
+power strip surge protector,equipment_hardware
+laptop charger replacement,equipment_hardware
+computer mouse pad,equipment_hardware
+conference room projector,equipment_hardware
+network switch hardware,equipment_hardware
+replacement laptop battery,equipment_hardware
+facebook ads campaign invoice,marketing_advertising
+google ads monthly spend,marketing_advertising
+business card printing order,marketing_advertising
+trade show booth fee,marketing_advertising
+promotional flyers printing,marketing_advertising
+sponsored linkedin post,marketing_advertising
+billboard advertising fee,marketing_advertising
+email marketing campaign fee,marketing_advertising
+branded merchandise order,marketing_advertising
+website seo consulting fee,marketing_advertising
+instagram ads campaign,marketing_advertising
+radio ad spot purchase,marketing_advertising
+banner printing for event,marketing_advertising
+influencer sponsorship payment,marketing_advertising
+direct mail campaign postage,marketing_advertising
+promotional pens with logo,marketing_advertising
+brochure design and print,marketing_advertising
+newspaper classified ad,marketing_advertising
+event sponsorship fee,marketing_advertising
+yelp advertising package,marketing_advertising
+accounting firm invoice services,professional_services
+lawyer consultation fee,professional_services
+bookkeeping monthly service,professional_services
+tax preparation service fee,professional_services
+notary public service fee,professional_services
+business consultant invoice,professional_services
+graphic design freelancer invoice,professional_services
+web developer contract payment,professional_services
+payroll processing service fee,professional_services
+legal document review fee,professional_services
+hr consulting service invoice,professional_services
+auditor professional fee,professional_services
+translation service invoice,professional_services
+architect consulting fee,professional_services
+financial advisor fee,professional_services
+insurance broker service fee,professional_services
+recruiter placement fee,professional_services
+it support contractor invoice,professional_services
+patent attorney filing fee,professional_services
+management consulting invoice,professional_services
+vending machine snack purchase,other
+parking meter coins,other
+miscellaneous cash purchase,other
+unidentified store purchase,other
+gift shop souvenir purchase,other
+donation to local charity,other
+flower shop purchase,other
+hardware store misc item,other
+convenience store snack,other
+laundry service for uniforms,other
+locksmith service call,other
+pet supply store purchase,other
+book store purchase,other
+music streaming subscription personal,other
+gym membership fee,other
+car wash service,other
+hair salon appointment,other
+pharmacy purchase over counter,other
+grocery store personal items,other
+movie theater tickets,other
