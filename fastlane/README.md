@@ -4,8 +4,8 @@ This project ships **documented** Fastlane lanes for release builds and store
 submission. They are intentionally **not** part of `.github/workflows/ci.yml`
 — running them requires real signing certificates / provisioning profiles /
 store API credentials that must never live in this repository or in CI
-secrets for a portfolio project. Treat everything below as the runbook a real
-release would follow, supplied out-of-band by whoever owns signing.
+secrets. Treat everything below as the release runbook, with signing material
+supplied out-of-band by whoever owns signing.
 
 ## Layout
 

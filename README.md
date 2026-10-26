@@ -1,16 +1,16 @@
 # ReceiptLens
 
+[![CI](https://github.com/SlateGitOrg/receiptlens/actions/workflows/ci.yml/badge.svg)](https://github.com/SlateGitOrg/receiptlens/actions/workflows/ci.yml)
+
 **On-device receipt digitization for freelancers and small businesses — no cloud OCR, no uploaded financial documents, ever.**
 
-![receiptlens](assets/hero.png)
-
-## The problem
+## Why
 
 Freelancers and small businesses burn hours every month manually re-typing receipts into a spreadsheet or bookkeeping tool. The obvious fix — snap a photo, run it through a cloud OCR API — creates a new problem: it means uploading photos of invoices, credit card slips, and vendor names to a third-party server. For anyone bound by client confidentiality, HIPAA-adjacent work, or basic financial-privacy hygiene, that trade is a non-starter, so they're stuck doing it by hand.
 
 ReceiptLens resolves that trade-off instead of asking the user to accept it: the camera capture, OCR, and expense-category classification all run **entirely on-device**. Nothing about the receipt — not the image, not the recognized text, not the parsed line items — ever leaves the phone. The only network traffic the app could possibly generate is the OS-level share sheet the user explicitly invokes to export a CSV, and that's opt-in, at export time, per file.
 
-## How it works
+## Architecture
 
 ```mermaid
 flowchart TD
@@ -73,7 +73,7 @@ python3 tool/ml/train_classifier.py
 
 This regenerates `assets/model/category_classifier.tflite` (the on-device production model) and `assets/model/weights.json` (the identical weights, exported for the pure-Dart reference path the tests run against).
 
-## What's implemented
+## Features
 
 - **Capture → crop**: live camera preview (`camera`), drag-to-crop overlay, grayscale + contrast normalization tuned for printed receipts (`package:image`).
 - **On-device OCR**: Google ML Kit text recognition, wrapped behind `TextRecognizer` so it's mockable.
@@ -82,6 +82,12 @@ This regenerates `assets/model/category_classifier.tflite` (the on-device produc
 - **Review & correct**: users can override any predicted category before saving.
 - **Encrypted local storage**: Drift/SQLite with AES-256-GCM field-level encryption and OS-keychain key storage; zero network calls anywhere in the persistence path.
 - **Monthly summary & export**: per-category monthly totals, plus CSV and QuickBooks-Online-importable CSV export via the OS share sheet.
+
+## Design notes
+
+- **Interfaces at the ML seams.** OCR and classification sit behind `TextRecognizer` and `LineItemClassifier`, so the pipeline runs unchanged in tests and on device.
+- **One set of weights, two runtimes.** The TFLite model and the pure-Dart reference classifier are exported from the same training run, so tests exercise the real model and the app can fall back if the native interpreter fails to load.
+- **Field-level encryption.** Sensitive columns are encrypted with AES-256-GCM before they reach SQLite; the key lives in the OS keychain.
 
 ## Project layout
 
@@ -101,7 +107,7 @@ test/                      Mirrors lib/, plus test/widget/ for full-flow
 tool/ml/                   Offline classifier training script + data.
 ```
 
-## Testing philosophy
+## Testing
 
 `flutter test` runs entirely offline: no camera, no device, no real TFLite interpreter, no network. Two abstractions make this possible without resorting to shallow mocks:
 
@@ -111,13 +117,19 @@ tool/ml/                   Offline classifier training script + data.
 Widget tests cover the capture → review → save tail of the flow using `ReviewReceiptScreen`'s `debugDraft` injection point (bypassing only the camera/OCR hardware dependency) plus a genuine in-memory Drift database, so the save path is exercised end-to-end, encryption included.
 
 ```bash
-flutter test                     # unit + widget tests (97 tests, offline)
+flutter test                     # 97 unit + widget tests, offline
 flutter analyze                  # static analysis
 ```
 
-## CI
+## Continuous integration
 
 `.github/workflows/ci.yml` runs `flutter analyze` and `flutter test` on every push/PR. No secrets, no signing, no device required.
+
+## Limitations
+
+- The parser is heuristic and tuned for printed, single-column receipts; handwritten or heavily skewed receipts will parse poorly.
+- The classifier is a small bag-of-words network over nine fixed categories, trained on the bundled `tool/ml/training_data.csv`.
+- OCR and TFLite need a real device or simulator; the test suite substitutes fakes for the camera and OCR hardware.
 
 ## Signing & release (Fastlane)
 
