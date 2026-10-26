@@ -2,11 +2,11 @@
 
 [![CI](https://github.com/SlateGitOrg/receiptlens/actions/workflows/ci.yml/badge.svg)](https://github.com/SlateGitOrg/receiptlens/actions/workflows/ci.yml)
 
-**On-device receipt digitization for freelancers and small businesses — no cloud OCR, no uploaded financial documents, ever.**
+On-device receipt digitization for freelancers and small businesses: snap a receipt, get categorized expenses and a QuickBooks-ready CSV, with no cloud OCR and no uploaded documents.
 
 ## Why
 
-Freelancers and small businesses burn hours every month manually re-typing receipts into a spreadsheet or bookkeeping tool. The obvious fix — snap a photo, run it through a cloud OCR API — creates a new problem: it means uploading photos of invoices, credit card slips, and vendor names to a third-party server. For anyone bound by client confidentiality, HIPAA-adjacent work, or basic financial-privacy hygiene, that trade is a non-starter, so they're stuck doing it by hand.
+Freelancers and small businesses burn hours every month manually re-typing receipts into a spreadsheet or bookkeeping tool. The obvious fix — snap a photo, run it through a cloud OCR API — creates a new problem: it means uploading photos of invoices, credit card slips, and vendor names to a third-party server. For anyone bound by client confidentiality or who simply wants to keep financial records private, that trade is a non-starter, so they end up doing it by hand.
 
 ReceiptLens resolves that trade-off instead of asking the user to accept it: the camera capture, OCR, and expense-category classification all run **entirely on-device**. Nothing about the receipt — not the image, not the recognized text, not the parsed line items — ever leaves the phone. The only network traffic the app could possibly generate is the OS-level share sheet the user explicitly invokes to export a CSV, and that's opt-in, at export time, per file.
 
@@ -32,7 +32,7 @@ Every box in the diagram above runs locally. The two ML-shaped steps — OCR and
 
 | Concern | Interface | Production implementation | Test double |
 |---|---|---|---|
-| Text recognition | `TextRecognizer` | `MlKitTextRecognizer` (`google_mlkit_text_recognition`, on-device) | `FakeTextRecognizer` (canned lines) |
+| Text recognition | `TextRecognizer` | `MlKitTextRecognizer` (`google_mlkit_text_recognition`, on-device) | `FakeTextRecognizer` in `test/domain/fakes.dart` (canned lines) |
 | Categorization | `LineItemClassifier` | `TfliteLineItemClassifier` (`tflite_flutter`, on-device) | `DartReferenceClassifier` — a pure-Dart re-implementation of the *same trained weights*, used both as a unit-testable reference and as an automatic runtime fallback if the native TFLite interpreter can't initialize |
 
 Because `DartReferenceClassifier` and `TfliteLineItemClassifier` share one exported weights file (`assets/model/weights.json`, trained by `tool/ml/train_classifier.py`), the unit test suite exercises the *actual trained model*, not a mock of it — with zero device, zero network, and zero native binaries required.
@@ -73,6 +73,22 @@ python3 tool/ml/train_classifier.py
 
 This regenerates `assets/model/category_classifier.tflite` (the on-device production model) and `assets/model/weights.json` (the identical weights, exported for the pure-Dart reference path the tests run against).
 
+## Usage
+
+1. **Capture.** Open the camera tab, frame the receipt and take the photo. Drag the crop handles to trim the background; the app converts the image to grayscale and boosts contrast before OCR.
+2. **Review.** The parsed vendor, date, line items and totals appear on the review screen, each line with its predicted category. Fix any wrong value or category.
+3. **Save.** Saving writes the receipt to the encrypted local database. Vendor, raw OCR text and line-item descriptions are stored encrypted.
+4. **Monthly summary.** The summary screen shows per-category totals for the selected month.
+5. **Export.** Choose CSV or QuickBooks from the summary screen; the file goes through the OS share sheet.
+
+The QuickBooks export (`lib/domain/export/quickbooks_exporter.dart`) writes `Date,Description,Amount` with `MM/dd/yyyy` dates, one row per line item, and expenses as negative amounts. An illustrative file for two saved receipts:
+
+```csv
+Date,Description,Amount
+03/15/2024,Delta Airlines - Flight ticket (Travel Expense),-450.00
+03/18/2024,Staples - Printer paper (Office Supplies),-24.99
+```
+
 ## Features
 
 - **Capture → crop**: live camera preview (`camera`), drag-to-crop overlay, grayscale + contrast normalization tuned for printed receipts (`package:image`).
@@ -85,9 +101,9 @@ This regenerates `assets/model/category_classifier.tflite` (the on-device produc
 
 ## Design notes
 
-- **Interfaces at the ML seams.** OCR and classification sit behind `TextRecognizer` and `LineItemClassifier`, so the pipeline runs unchanged in tests and on device.
 - **One set of weights, two runtimes.** The TFLite model and the pure-Dart reference classifier are exported from the same training run, so tests exercise the real model and the app can fall back if the native interpreter fails to load.
 - **Field-level encryption.** Sensitive columns are encrypted with AES-256-GCM before they reach SQLite; the key lives in the OS keychain.
+- **One QuickBooks row per line item.** Each expense is mapped to its own QuickBooks account so it can be reconciled individually after import.
 
 ## Project layout
 
@@ -111,7 +127,7 @@ tool/ml/                   Offline classifier training script + data.
 
 `flutter test` runs entirely offline: no camera, no device, no real TFLite interpreter, no network. Two abstractions make this possible without resorting to shallow mocks:
 
-- `TextRecognizer` is faked with canned OCR output (`FakeTextRecognizer`), so `ReceiptProcessingPipeline` tests exercise real parsing + real classification against synthetic-but-realistic receipt text.
+- `TextRecognizer` is faked with canned OCR output (`FakeTextRecognizer`, defined in `test/domain/fakes.dart`), so `ReceiptProcessingPipeline` tests exercise real parsing + real classification against synthetic-but-realistic receipt text.
 - `LineItemClassifier` test coverage runs the `DartReferenceClassifier` implementation loaded from the *actual* bundled `assets/model/*.json` — the same trained weights production code uses — so the tests validate real model behavior, not a stub.
 
 Widget tests cover the capture → review → save tail of the flow using `ReviewReceiptScreen`'s `debugDraft` injection point (bypassing only the camera/OCR hardware dependency) plus a genuine in-memory Drift database, so the save path is exercised end-to-end, encryption included.
